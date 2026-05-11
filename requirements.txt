@@ -1,0 +1,6 @@
+aiogram
+reportlab
+pypdf
+pymupdf
+pillow
+python-dotenv
