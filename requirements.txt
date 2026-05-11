@@ -1,5 +1,5 @@
 aiogram
-reportlab
+reportlab==4.2.5
 pypdf
 pymupdf
 pillow
