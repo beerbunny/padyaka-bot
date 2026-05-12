@@ -29,7 +29,7 @@ TEMPLATES = [
         "template_pdf": "templates/thanks.pdf",
 
         "font_name": "Arial",
-        "font_path": "fonts/arialmt.ttf",
+        "font_path": "fonts/arial/ARIAL.TTF",
 
         "font_size": 66,
         "line_height": 72,
