@@ -43,7 +43,7 @@ TEMPLATES = [
 
         # сила утолщения
         "fake_bold_offset": 0.35,
-        "letter_spacing": 1.2,
+        "letter_spacing": 1.0,
     },
 
     # =====================================
