@@ -42,7 +42,7 @@ TEMPLATES = [
         "fake_bold": True,
 
         # сила утолщения
-        "fake_bold_offset": 0.45,
+        "fake_bold_offset": 0.5,
         "letter_spacing": 0.5,
     },
 
