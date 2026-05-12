@@ -99,6 +99,8 @@ async def handle_text(message: Message):
             await loop.run_in_executor(
                 None,
                 lambda template=template, output_pdf=output_pdf, output_png=output_png: make_pdf_and_png(
+                    fake_bold=template.get("fake_bold", False),
+                    fake_bold_offset=template.get("fake_bold_offset", 0),
                     template_pdf=template["template_pdf"],
                     output_pdf=output_pdf,
                     output_png=output_png,
@@ -109,8 +111,7 @@ async def handle_text(message: Message):
                     font_size=template["font_size"],
                     line_height=template["line_height"],
                     text_color=template["text_color"],
-                    fake_bold=template.get("fake_bold", False),
-                    fake_bold_offset=template.get("fake_bold_offset", 0),
+
 
                     bottom_y=template["bottom_y"],
                     text_center_x=template["text_center_x"],
