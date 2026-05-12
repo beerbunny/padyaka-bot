@@ -31,7 +31,7 @@ TEMPLATES = [
         "font_name": "Arial",
         "font_path": "fonts/arialmt.ttf",
 
-        "font_size": 62,
+        "font_size": 66,
         "line_height": 72,
 
         "text_center_x": None,
