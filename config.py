@@ -33,7 +33,7 @@ TEMPLATES = [
         # ШРИФТ
 
         # Внутреннее имя
-        "font_name": "ArialMedium",
+        "font_name": "ArialMdm",
 
         # Путь к TTF
         "font_path": "fonts/arial/ArialMdm.ttf",
