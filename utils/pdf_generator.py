@@ -40,8 +40,6 @@ def split_user_lines(text):
 
 
 def make_pdf_and_png(
-    fake_bold=False,
-    fake_bold_offset=0,
     template_pdf,
     output_pdf,
     output_png,
@@ -55,6 +53,9 @@ def make_pdf_and_png(
 
     bottom_y,
     text_center_x,
+
+    fake_bold=False,
+    fake_bold_offset=0,
 ):
 
     register_font_once(
