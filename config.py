@@ -41,6 +41,9 @@ TEMPLATES = [
         # Размер шрифта
         "font_size": 62,
 
+        # Цвет
+        "text_color": "#000000",
+
         # Межстрочный интервал
         "line_height": 72,
 
@@ -70,6 +73,7 @@ TEMPLATES = [
         "line_height": 34,
 
         "text_center_x": None,
+        "text_color": "#fdd22b",
 
         "bottom_y": 400,
     },

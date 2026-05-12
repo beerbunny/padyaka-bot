@@ -10,6 +10,7 @@ from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
+from reportlab.lib.colors import HexColor
 
 from config import PNG_SCALE
 
@@ -48,6 +49,7 @@ def make_pdf_and_png(
     font_path,
     font_size,
     line_height,
+    text_color,
 
     bottom_y,
     text_center_x,
@@ -83,6 +85,10 @@ def make_pdf_and_png(
     c.setFont(
         font_name,
         font_size
+    )
+
+    c.setFillColor(
+        HexColor(text_color)
     )
 
     for i, line in enumerate(lines):

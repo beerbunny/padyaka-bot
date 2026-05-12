@@ -108,6 +108,7 @@ async def handle_text(message: Message):
                     font_path=template["font_path"],
                     font_size=template["font_size"],
                     line_height=template["line_height"],
+                    text_color=template["text_color"],
 
                     bottom_y=template["bottom_y"],
                     text_center_x=template["text_center_x"],
