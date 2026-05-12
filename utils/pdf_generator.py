@@ -19,7 +19,6 @@ REGISTERED_FONTS = set()
 
 
 def register_font_once(font_name, font_path):
-
     if font_name in REGISTERED_FONTS:
         return
 
@@ -31,12 +30,90 @@ def register_font_once(font_name, font_path):
 
 
 def split_user_lines(text):
-
     return [
         line.strip()
         for line in text.strip().splitlines()
         if line.strip()
     ]
+
+
+def draw_text_with_spacing(
+    c,
+    text,
+    x,
+    y,
+    font_name,
+    font_size,
+    letter_spacing=0,
+):
+    text_width = pdfmetrics.stringWidth(
+        text,
+        font_name,
+        font_size
+    )
+
+    extra_spacing = max(len(text) - 1, 0) * letter_spacing
+
+    total_width = text_width + extra_spacing
+
+    current_x = x - (total_width / 2)
+
+    for char in text:
+        c.drawString(
+            current_x,
+            y,
+            char
+        )
+
+        char_width = pdfmetrics.stringWidth(
+            char,
+            font_name,
+            font_size
+        )
+
+        current_x += char_width + letter_spacing
+
+
+def draw_line(
+    c,
+    line,
+    x,
+    y,
+    font_name,
+    font_size,
+    letter_spacing=0,
+    fake_bold=False,
+    fake_bold_offset=0,
+):
+    if fake_bold:
+        offsets = [
+            (0, 0),
+            (fake_bold_offset, 0),
+            (0, fake_bold_offset),
+            (fake_bold_offset, fake_bold_offset),
+        ]
+
+        for dx, dy in offsets:
+            draw_text_with_spacing(
+                c=c,
+                text=line,
+                x=x + dx,
+                y=y + dy,
+                font_name=font_name,
+                font_size=font_size,
+                letter_spacing=letter_spacing,
+            )
+
+    else:
+        draw_text_with_spacing(
+            c=c,
+            text=line,
+            x=x,
+            y=y,
+            font_name=font_name,
+            font_size=font_size,
+            letter_spacing=letter_spacing,
+        )
 
 
 def make_pdf_and_png(
@@ -54,35 +131,29 @@ def make_pdf_and_png(
     bottom_y,
     text_center_x,
 
+    letter_spacing=0,
     fake_bold=False,
     fake_bold_offset=0,
 ):
-
     register_font_once(
         font_name,
         font_path
     )
 
     reader = PdfReader(template_pdf)
-
     page = reader.pages[0]
 
     page_width = float(page.mediabox.width)
+    page_height = float(page.mediabox.height)
+
     if text_center_x is None:
         text_center_x = page_width / 2
-    page_height = float(page.mediabox.height)
 
     packet = BytesIO()
 
     c = canvas.Canvas(
         packet,
         pagesize=(page_width, page_height)
-    )
-
-    lines = split_user_lines(text)
-
-    start_y = bottom_y + (
-        (len(lines) - 1) * line_height
     )
 
     c.setFont(
@@ -94,35 +165,28 @@ def make_pdf_and_png(
         HexColor(text_color)
     )
 
-    for i, line in enumerate(lines):
+    lines = split_user_lines(text)
 
+    start_y = bottom_y + (
+        (len(lines) - 1) * line_height
+    )
+
+    for i, line in enumerate(lines):
         y = start_y - (
             i * line_height
         )
 
-        if fake_bold:
-
-            offsets = [
-                (0, 0),
-                (fake_bold_offset, 0),
-                (0, fake_bold_offset),
-                (fake_bold_offset, fake_bold_offset),
-            ]
-
-            for dx, dy in offsets:
-                c.drawCentredString(
-                    text_center_x + dx,
-                    y + dy,
-                    line
-                )
-
-        else:
-
-            c.drawCentredString(
-                text_center_x,
-                y,
-                line
-            )
+        draw_line(
+            c=c,
+            line=line,
+            x=text_center_x,
+            y=y,
+            font_name=font_name,
+            font_size=font_size,
+            letter_spacing=letter_spacing,
+            fake_bold=fake_bold,
+            fake_bold_offset=fake_bold_offset,
+        )
 
     c.save()
 
@@ -135,16 +199,12 @@ def make_pdf_and_png(
     )
 
     writer = PdfWriter()
-
     writer.add_page(page)
 
     with open(output_pdf, "wb") as f:
         writer.write(f)
 
-    # PDF -> PNG
-
     doc = fitz.open(output_pdf)
-
     pdf_page = doc[0]
 
     matrix = fitz.Matrix(

@@ -113,6 +113,7 @@ async def handle_text(message: Message):
 
                     bottom_y=template["bottom_y"],
                     text_center_x=template["text_center_x"],
+                    letter_spacing=template.get("letter_spacing", 0),
                     fake_bold=template.get("fake_bold", False),
                     fake_bold_offset=template.get("fake_bold_offset", 0),
                 )
