@@ -24,37 +24,25 @@ TEMPLATES = [
     # =====================================
 
     {
-        # Имя шаблона
         "name": "thanks_1",
 
-        # PDF шаблон
         "template_pdf": "templates/thanks.pdf",
 
-        # ШРИФТ
+        "font_name": "Arial",
+        "font_path": "fonts/arialmt.ttf",
 
-        # Внутреннее имя
-        "font_name": "ArialMediumCompat",
-
-        # Путь к TTF
-        "font_path": "fonts/ArialMediumCompat.ttf",
-
-        # Размер шрифта
         "font_size": 62,
-
-        # Цвет
-        "text_color": "#000000",
-
-        # Межстрочный интервал
         "line_height": 72,
 
-        # ПОЗИЦИЯ ТЕКСТА
-
-        # X центра текста
         "text_center_x": None,
-
-        # Y НИЖНЕЙ строки
-        # Блок растёт вверх
         "bottom_y": 1020,
+
+        "text_color": "#000000",
+
+        "fake_bold": True,
+
+        # сила утолщения
+        "fake_bold_offset": 0.35,
     },
 
     # =====================================

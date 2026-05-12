@@ -50,6 +50,8 @@ def make_pdf_and_png(
     font_size,
     line_height,
     text_color,
+    fake_bold=False,
+    fake_bold_offset=0,
 
     bottom_y,
     text_center_x,
@@ -97,11 +99,29 @@ def make_pdf_and_png(
             i * line_height
         )
 
-        c.drawCentredString(
-            text_center_x,
-            y,
-            line
-        )
+        if fake_bold:
+
+            offsets = [
+                (0, 0),
+                (fake_bold_offset, 0),
+                (0, fake_bold_offset),
+                (fake_bold_offset, fake_bold_offset),
+            ]
+
+            for dx, dy in offsets:
+                c.drawCentredString(
+                    text_center_x + dx,
+                    y + dy,
+                    line
+                )
+
+        else:
+
+            c.drawCentredString(
+                text_center_x,
+                y,
+                line
+            )
 
     c.save()
 
