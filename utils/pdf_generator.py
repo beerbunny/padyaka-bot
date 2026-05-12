@@ -63,6 +63,8 @@ def make_pdf_and_png(
     page = reader.pages[0]
 
     page_width = float(page.mediabox.width)
+    if text_center_x is None:
+        text_center_x = page_width / 2
     page_height = float(page.mediabox.height)
 
     packet = BytesIO()

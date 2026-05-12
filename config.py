@@ -47,7 +47,7 @@ TEMPLATES = [
         # ПОЗИЦИЯ ТЕКСТА
 
         # X центра текста
-        "text_center_x": 239.2,
+        "text_center_x": None,
 
         # Y НИЖНЕЙ строки
         # Блок растёт вверх
@@ -69,7 +69,7 @@ TEMPLATES = [
         "font_size": 28,
         "line_height": 34,
 
-        "text_center_x": 297.5,
+        "text_center_x": None,
 
         "bottom_y": 400,
     },
