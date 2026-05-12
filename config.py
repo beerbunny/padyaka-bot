@@ -75,7 +75,7 @@ TEMPLATES = [
         "text_center_x": None,
         "text_color": "#fdd22b",
 
-        "bottom_y": 450,
+        "bottom_y": 435,
     },
 ]
 
