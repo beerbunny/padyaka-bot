@@ -33,10 +33,10 @@ TEMPLATES = [
         # ШРИФТ
 
         # Внутреннее имя
-        "font_name": "Arial",
+        "font_name": "ArialMedium",
 
         # Путь к TTF
-        "font_path": "fonts/arialmt.ttf",
+        "font_path": "fonts/arial/ArialMdm.ttf",
 
         # Размер шрифта
         "font_size": 62,
