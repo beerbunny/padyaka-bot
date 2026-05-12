@@ -42,8 +42,8 @@ TEMPLATES = [
         "fake_bold": True,
 
         # сила утолщения
-        "fake_bold_offset": 0.35,
-        "letter_spacing": 1.0,
+        "fake_bold_offset": 0.45,
+        "letter_spacing": 0.5,
     },
 
     # =====================================
