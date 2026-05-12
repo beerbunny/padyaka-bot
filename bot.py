@@ -9,6 +9,7 @@ import uuid
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, FSInputFile
+from utils.cleanup import cleanup_old_files
 
 from config import (
     BOT_TOKEN,
@@ -72,6 +73,8 @@ async def handle_text(message: Message):
         )
         return
 
+    cleanup_old_files(PDF_OUTPUT_DIR)
+    cleanup_old_files(PNG_OUTPUT_DIR)
     file_id = uuid.uuid4().hex
 
     output_pdf = os.path.join(
