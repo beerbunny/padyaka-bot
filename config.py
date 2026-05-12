@@ -28,7 +28,7 @@ TEMPLATES = [
         "name": "thanks_1",
 
         # PDF шаблон
-        "template_pdf": "thanks.pdf",
+        "template_pdf": "templates/thanks.pdf",
 
         # ШРИФТ
 
@@ -36,7 +36,7 @@ TEMPLATES = [
         "font_name": "Arial",
 
         # Путь к TTF
-        "font_path": "arialmt.ttf",
+        "font_path": "fonts/arialmt.ttf",
 
         # Размер шрифта
         "font_size": 62,
@@ -61,10 +61,10 @@ TEMPLATES = [
     {
         "name": "thanks_2",
 
-        "template_pdf": "thanks2.pdf",
+        "template_pdf": "templates/thanks2.pdf",
 
         "font_name": "MontserratBold",
-        "font_path": "Montserrat-Bold.ttf",
+        "font_path": "fonts/Montserrat-Bold.ttf",
 
         "font_size": 28,
         "line_height": 34,
