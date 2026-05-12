@@ -85,7 +85,8 @@ async def handle_text(message: Message):
     )
 
     try:
-        make_pdf_and_png(
+        await asyncio.to_thread(
+            make_pdf_and_png,
             template_pdf=TEMPLATE_PDF,
             output_pdf=output_pdf,
             output_png=output_png,
