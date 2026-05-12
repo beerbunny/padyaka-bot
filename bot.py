@@ -9,16 +9,16 @@ import uuid
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, FSInputFile
-from utils.cleanup import cleanup_old_files
 
 from config import (
     BOT_TOKEN,
-    TEMPLATE_PDF,
+    TEMPLATES,
     MAX_TEXT_LENGTH,
     PDF_OUTPUT_DIR,
     PNG_OUTPUT_DIR,
 )
 
+from utils.cleanup import cleanup_old_files
 from utils.pdf_generator import make_pdf_and_png
 
 
@@ -75,40 +75,63 @@ async def handle_text(message: Message):
 
     cleanup_old_files(PDF_OUTPUT_DIR)
     cleanup_old_files(PNG_OUTPUT_DIR)
+
     file_id = uuid.uuid4().hex
-
-    output_pdf = os.path.join(
-        PDF_OUTPUT_DIR,
-        f"thanks_{file_id}.pdf"
-    )
-
-    output_png = os.path.join(
-        PNG_OUTPUT_DIR,
-        f"thanks_{file_id}.png"
-    )
+    generated_files = []
 
     try:
         loop = asyncio.get_running_loop()
 
-        await loop.run_in_executor(
-            None,
-            lambda: make_pdf_and_png(
-                template_pdf=TEMPLATE_PDF,
-                output_pdf=output_pdf,
-                output_png=output_png,
-                text=user_text,
+        # Генерируем шаблоны по очереди, чтобы не душить CPU/RAM.
+        for template in TEMPLATES:
+            template_name = template["name"]
+
+            output_pdf = os.path.join(
+                PDF_OUTPUT_DIR,
+                f"{template_name}_{file_id}.pdf"
             )
-        )
 
-        await message.answer_document(
-            FSInputFile(output_pdf),
-            caption="PDF готовий."
-        )
+            output_png = os.path.join(
+                PNG_OUTPUT_DIR,
+                f"{template_name}_{file_id}.png"
+            )
 
-        await message.answer_document(
-            FSInputFile(output_png),
-            caption="PNG готовий."
-        )
+            await loop.run_in_executor(
+                None,
+                lambda template=template, output_pdf=output_pdf, output_png=output_png: make_pdf_and_png(
+                    template_pdf=template["template_pdf"],
+                    output_pdf=output_pdf,
+                    output_png=output_png,
+                    text=user_text,
+
+                    font_name=template["font_name"],
+                    font_path=template["font_path"],
+                    font_size=template["font_size"],
+                    line_height=template["line_height"],
+
+                    bottom_y=template["bottom_y"],
+                    text_center_x=template["text_center_x"],
+                )
+            )
+
+            generated_files.append(
+                {
+                    "template_name": template_name,
+                    "pdf": output_pdf,
+                    "png": output_png,
+                }
+            )
+
+        for item in generated_files:
+            await message.answer_document(
+                FSInputFile(item["pdf"]),
+                caption=f"{item['template_name']} PDF готовий."
+            )
+
+            await message.answer_document(
+                FSInputFile(item["png"]),
+                caption=f"{item['template_name']} PNG готовий."
+            )
 
     except Exception as e:
         logging.exception("Generation failed")
@@ -131,14 +154,28 @@ async def main():
 
     if not BOT_TOKEN or BOT_TOKEN == "TOKEN":
         raise RuntimeError(
-            "Встав нормальний BOT_TOKEN у config.py. "
+            "Встав нормальний BOT_TOKEN у .env. "
             "Бот без токена, на жаль, не телепат."
         )
 
-    if not os.path.exists(TEMPLATE_PDF):
-        raise FileNotFoundError(
-            f"Не знайдено шаблон PDF: {TEMPLATE_PDF}"
+    if not TEMPLATES:
+        raise RuntimeError(
+            "У config.py немає жодного шаблону в TEMPLATES."
         )
+
+    for template in TEMPLATES:
+        template_pdf = template["template_pdf"]
+        font_path = template["font_path"]
+
+        if not os.path.exists(template_pdf):
+            raise FileNotFoundError(
+                f"Не знайдено шаблон PDF: {template_pdf}"
+            )
+
+        if not os.path.exists(font_path):
+            raise FileNotFoundError(
+                f"Не знайдено шрифт: {font_path}"
+            )
 
     logging.info("Bot started")
 

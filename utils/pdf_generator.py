@@ -1,3 +1,4 @@
+# utils/pdf_generator.py
 # -*- coding: utf-8 -*-
 
 from io import BytesIO
@@ -10,18 +11,22 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 
-from config import (
-    FONT_NAME,
-    FONT_PATH,
-    FONT_SIZE,
-    LINE_HEIGHT,
-    BOTTOM_Y,
-    PNG_SCALE,
-)
+from config import PNG_SCALE
 
-pdfmetrics.registerFont(
-    TTFont(FONT_NAME, FONT_PATH)
-)
+
+REGISTERED_FONTS = set()
+
+
+def register_font_once(font_name, font_path):
+
+    if font_name in REGISTERED_FONTS:
+        return
+
+    pdfmetrics.registerFont(
+        TTFont(font_name, font_path)
+    )
+
+    REGISTERED_FONTS.add(font_name)
 
 
 def split_user_lines(text):
@@ -38,7 +43,20 @@ def make_pdf_and_png(
     output_pdf,
     output_png,
     text,
+
+    font_name,
+    font_path,
+    font_size,
+    line_height,
+
+    bottom_y,
+    text_center_x,
 ):
+
+    register_font_once(
+        font_name,
+        font_path
+    )
 
     reader = PdfReader(template_pdf)
 
@@ -46,8 +64,6 @@ def make_pdf_and_png(
 
     page_width = float(page.mediabox.width)
     page_height = float(page.mediabox.height)
-
-    text_center_x = page_width / 2
 
     packet = BytesIO()
 
@@ -58,19 +74,19 @@ def make_pdf_and_png(
 
     lines = split_user_lines(text)
 
-    start_y = BOTTOM_Y + (
-        (len(lines) - 1) * LINE_HEIGHT
+    start_y = bottom_y + (
+        (len(lines) - 1) * line_height
     )
 
     c.setFont(
-        FONT_NAME,
-        FONT_SIZE
+        font_name,
+        font_size
     )
 
     for i, line in enumerate(lines):
 
         y = start_y - (
-            i * LINE_HEIGHT
+            i * line_height
         )
 
         c.drawCentredString(
